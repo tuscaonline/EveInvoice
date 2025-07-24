@@ -1,0 +1,32 @@
+[project]
+name = "eve-invoice"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Pierre Nerriere",email = "pierre@nerriere.net"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pandas[performance] (>=2.3.1,<3.0.0)",
+    "requests (>=2.32.4,<3.0.0)",
+    "platformdirs (>=4.3.8,<5.0.0)",
+    "python-dateutil (>=2.9.0.post0,<3.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)",
+    "rich (>=14.0.0,<15.0.0)",
+    "more-itertools (>=10.7.0,<11.0.0)",
+    "requests-cache (>=1.2.1,<2.0.0)",
+]
+
+[tool.poetry]
+packages = [{include = "eve_invoice", from = "src"}]
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+pytest = "^8.4.1"
+requests-mock = "^1.12.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
