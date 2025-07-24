@@ -1,5 +1,5 @@
 from eve_invoice import load
-from eve_invoice.fsd import Bom
+from eve_invoice.bom import Bom
 
 def test_loadFsd():
     fsd = load.loadFsd()

@@ -48,31 +48,29 @@ def fsdLoadTypeMaterials(update=False):
 def loadFsdFromFiles(update=False):
     if not dirs.exists():
         dirs.mkdir(parents=True)
-    log.warning('loadFsd')
+    log.warning("loadFsd")
     fsdTypes = fsdLoadType(update)
     # import le materiel de la SDE
-    log.warning('fsdTypeMaterials')
+    log.warning("fsdTypeMaterials")
 
     fsdTypeMaterials = fsdLoadTypeMaterials(update)
     for keys, item in fsdTypeMaterials.items():
         if keys in fsdTypes:
             fsdTypes[keys].sdeMaterials = item
 
-    log.warning('holoLeakMaterial')
     holoLeakMaterial = HoloLeakBillOfMaterials()
     for keys, item in holoLeakMaterial.items():
         if keys in fsdTypes:
             fsdTypes[keys].hololeakMaterials = item
 
     # lecture des blueprint hololeak
-    log.warning('holoLeakBP')
     holoLeakBP = HoloBlueprints()
     for keys, item in holoLeakBP.items():
         if keys in fsdTypes:
             fsdTypes[keys].hololeakBluePrint = item
 
     # association des BP au produit d'origine
-    log.warning('AsssoBP')
+    log.warning("AsssoBP")
 
     bps = filter(lambda y: y.hololeakBluePrint, fsdTypes.values())
     for eveType in bps:
@@ -80,27 +78,23 @@ def loadFsdFromFiles(update=False):
             if eveType.hololeakBluePrint.activities:
                 if eveType.hololeakBluePrint.activities.manufacturing:
                     if eveType.hololeakBluePrint.activities.manufacturing.products:
-
                         product = first(
                             eveType.hololeakBluePrint.activities.manufacturing.products,
                             None,
                         )
                         if product:
-                            if product.typeID in fsdTypes: 
+                            if product.typeID in fsdTypes:
                                 fsdTypes[product.typeID].bluePrintId = (
                                     eveType.hololeakBluePrint.blueprintTypeID
                                 )
                                 fsdTypes[product.typeID].hololeakBluePrint = (
-                                    eveType.hololeakBluePrint 
+                                    eveType.hololeakBluePrint
                                 )
-    log.warning('marketPrice')
-        
+
     marketPrice = EsiMarket()
     for keys, item in marketPrice.items():
         if keys in fsdTypes:
             fsdTypes[keys].esiMarket = item
-
-
 
     return fsdTypes
 

@@ -5,6 +5,8 @@ from typing import Any
 
 # from .fsd import EveBillOfMaterialRow
 from eve_invoice import requestSession
+import logging
+log  = logging.getLogger(__name__)
 
 @dataclass
 class HoloLeakBillOfMaterialRow:
@@ -23,7 +25,11 @@ class HoloLeakBillOfMaterials(UserDict[int, list[HoloLeakBillOfMaterialRow]]):
                         bill.append(HoloLeakBillOfMaterialRow(**row))
                     self.data[int(keys)] = bill
         else:
+            log.info('Download typeMaterial from hololeak')
             r = requestSession.get("https://sde.hoboleaks.space/tq/typematerials.json")
+            if r.from_cache:
+                log.info('use hololeak typeMaterial from cache')
+
             _bp = r.json()
             if isinstance(_bp, dict):
                 for keys, item in _bp.items():
@@ -139,8 +145,11 @@ class HoloBlueprints(UserDict[int, HoloBlueprint]):
             for keys, item in obj.items():
                 self.data[int(keys)] = HoloBlueprint(**item)
         else:
+            log.info('Download blueprints from hololeak')
             r = requestSession.get("https://sde.hoboleaks.space/tq/blueprints.json")
             _bp = r.json()
+            if r.from_cache:
+                log.info('use hololeak blueprints from cache')
             for keys, item in _bp.items():
                 self.data[int(keys)] = HoloBlueprint(**item)
 
@@ -152,3 +161,14 @@ class HoloBlueprints(UserDict[int, HoloBlueprint]):
 
         raise KeyError(key)
  
+
+def loadHololeakBleuprint()->dict[int, HoloBlueprint]:
+        log.info('Download blueprints from hololeak')
+        r = requestSession.get("https://sde.hoboleaks.space/tq/blueprints.json")
+        _bp: dict = r.json()
+        if r.from_cache:
+            log.info('use hololeak blueprints from cache')
+        data = {}
+        for keys, item in _bp.items():
+            data[int(keys)] = HoloBlueprint(**item)
+        return data
